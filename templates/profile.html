@@ -1,0 +1,31 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<div class="container-fluid my-5 ms-5">
+    <div class="row g-3">
+        <div class="col-4">
+            <img class="img-fuild img-thumbnail" src={{profile.imageURL}} />
+            <div class="my-3">
+                <h4>{{profile.name}}</h4>
+            </div>
+        </div>
+        <div class="col-6">
+            <div>
+                <a class="btn btn-secondary" type="button" href="{% url 'edit-profile' %}">Edit Profile</a>
+            </div>
+            <hr>
+            <div class="row my-3">
+                {% if profile.bio %}
+                    <p>{{profile.bio}}</p>
+                {% endif %}
+            </div>
+            <div class="row my-3">
+                <!-- Add tweet here -->
+            </div>
+            
+        </div>
+    </div>
+    
+
+</div>
+{% endblock content %}

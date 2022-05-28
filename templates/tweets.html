@@ -1,0 +1,42 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+<div class="container my-5">
+    <p><div class="d-grid">
+        <button class="btn btn-outline-dark fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+          Share your story !
+        </button>
+    </div></p>
+    <form method="POST" class="collapse" id="collapseExample">
+        {% csrf_token %}
+        <div class="card card-body">
+            {{form.content}}
+            <div class="container d-grid">
+                <button class="btn btn-dark fs-5" type="submit">Tweet</button>
+            </div>
+        </div>
+    </form>
+
+    {% for tweet in tweets %}
+    <div class="card my-3">
+        <div class="card-header">
+            <div class="row">
+                <div class="col">{{tweet.owner.name}}</div>
+                <div class="col text-muted d-grid justify-content-md-end">Posted on {{tweet.created|date:"M d, Y"}}</div>
+            </div>
+        </div>
+        <div class="card-body">
+            {{tweet.content}}
+        </div>
+        <ul class="row row-cols-auto ms-2 list-unstyled">
+            <li type="button"><img  class="col" width="20px" height="20px" src="{% static 'svg/heart.svg' %}"/></li>
+            <li type="button"><img  class="col" width="20px" height="20px" src="{% static 'svg/share.svg' %}"/></li>
+            <li type="button"><img  class="col" width="20px" height="20px" src="{% static 'svg/message-circle.svg' %}"/></li>
+        </ul>
+    </div>
+    {% endfor %}
+</div>
+
+
+
+{% endblock content %}

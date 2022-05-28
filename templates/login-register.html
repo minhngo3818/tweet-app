@@ -1,0 +1,46 @@
+{% extends 'main.html' %}
+
+{% block content%}
+
+{% if page == 'register' %}
+<div class="container my-5">
+    <h2>Sign Up Your New Account Now!</h2><br>
+    <form class="row g-3" method="POST" action="{% url 'register' %}">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="col-12">
+                <label for="formInput" class="form-label fs-4">{{field.label}}</label>
+                <div class="form-group">{{field}}</div>
+                  
+            </div>
+        {% endfor %}
+        <div class="text-center">
+            <button type="submit" value="Sign-up" class="btn btn-outline-dark btn-lg px-5 my-4">Sign Up</button>
+        </div>
+    </form>
+    
+</div>
+{% else %}
+<div class="container my-5">
+    <h2>Sign-in Your Account</h2><br>
+    <form method="POST" action="{% url 'login' %}">
+        {% csrf_token %}
+        <div class="row mb-3">
+            <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">Username</label>
+            <div class="col-sm-10">
+                <input type="text" name="username" class="form-control"/>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">Password</label>
+            <div class="col-sm-10">
+                <input type="password" name="password" class="form-control" id="inputPassword"/>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-outline-dark btn-lg px-5 ">Sign In</button>
+        <a class="ms-5 fs-6" href="{% url 'register' %}">Don't have an account?  Sign-Up Now!</a>
+    </form>
+</div>
+{% endif %}
+
+{% endblock content %}

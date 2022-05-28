@@ -1,0 +1,100 @@
+from django.shortcuts import render, redirect
+from django.contrib.auth import login, logout, authenticate
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.urls import conf
+from .models import Profile, Tweet
+from .forms import ClientCreationForm, ProfileForm, TweetForm
+
+# Create your views here.
+def viewHome(request):
+    return render(request, 'homepage.html')
+
+def userLogin(request):
+    if request.user.is_authenticated:
+        return redirect('profile')
+
+    if request.method == "POST":
+        username = request.POST['username']
+        print(username)
+        password = request.POST['password']
+
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            messages.error(request, "Username does not exist!")
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect(request.GET['next'] if 'next' in request.GET else 'home')
+        else:
+            messages.error(request, 'Username Or Password is not correct')
+
+    return render(request, 'login-register.html', {'page': 'login'})
+
+def userLogout(request):
+    logout(request)
+    return redirect('login')
+
+def userRegister(request):
+    form = ClientCreationForm()
+
+    if request.method == 'POST':
+        form = ClientCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.username = user.username.lower()
+            user.save()
+            login(request, user)
+            return redirect('edit-profile')
+        else:
+            messages.success(request, 'An error has occured during registration')
+
+    context = {'page': 'register', 'form': form}
+    return render(request, 'login-register.html', context)
+
+@login_required(login_url='login')
+def viewProfile(request):
+    profile = request.user.profile
+    return render(request, 'profile.html', {'profile': profile})
+
+@login_required(login_url='login')
+def editProfile(request):
+    profile = request.user.profile
+    form = ProfileForm(instance=profile)
+
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+
+    context = {'form':form}
+    return render(request, 'edit-profile.html', context)
+
+@login_required(login_url='login')
+def viewTweet(request):
+    form = TweetForm()
+
+    if request.method == "POST":
+        form = TweetForm(request.POST)
+        tweet = form.save(commit=False)
+        tweet.owner = request.user.profile
+        tweet.save()
+        messages.success(request, "Your tweet was posted!")
+
+        return redirect('tweets')   
+        # Refresh the page, no copy of data within form will be replicated
+
+    tweets = Tweet.objects.all()
+    context = {
+        'form': form,
+        'tweets': tweets
+    }
+
+    return render(request, 'tweets.html', context)
+
+

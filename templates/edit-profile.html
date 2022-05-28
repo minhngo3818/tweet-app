@@ -1,0 +1,21 @@
+{% extends 'main.html' %}
+{% block content %}
+<div class="container my-5">
+    <a class="btn btn-secondary px-4" href="{% url 'profile' %}">Return to Profile</a>
+    <hr>
+
+    <form method="POST" action="{% url 'edit-profile' %}">
+    {% csrf_token%}
+    {% for field in form %}
+    <div class="col-12 my-3">
+        <label for="formInput" class="form-label fs-4">{{field.label}}</label>
+        <div class="form-group">{{field}}</div>
+    </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-outline-dark btn-lg px-5 my-4">Save Profile</button>
+    </form>
+    
+</div>
+
+{% endblock content %}
+

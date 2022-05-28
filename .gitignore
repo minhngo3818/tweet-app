@@ -1,0 +1,5 @@
+venv/*
+user/__pycache__/*
+user/migrations/*
+user_app/__pycache__/*
+db.sqlite3
