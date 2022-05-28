@@ -3,11 +3,13 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.views.decorators.cache import cache_control, never_cache # Fix logout browser back btn
 from django.urls import conf
 from .models import Profile, Tweet
 from .forms import ClientCreationForm, ProfileForm, TweetForm
 
 # Create your views here.
+@never_cache
 def viewHome(request):
     return render(request, 'homepage.html')
 
@@ -35,6 +37,8 @@ def userLogin(request):
 
     return render(request, 'login-register.html', {'page': 'login'})
 
+
+@login_required(login_url='login')
 def userLogout(request):
     logout(request)
     return redirect('login')
@@ -75,6 +79,7 @@ def editProfile(request):
     context = {'form':form}
     return render(request, 'edit-profile.html', context)
 
+@cache_control(no_store=True, no_cache=True, no_revalidate=True)
 @login_required(login_url='login')
 def viewTweet(request):
     form = TweetForm()
