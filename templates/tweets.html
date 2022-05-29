@@ -29,9 +29,18 @@
             {{tweet.content}}
         </div>
         <ul class="row row-cols-auto ms-2 list-unstyled">
-            <li type="button"><img  class="col" width="20px" height="20px" src="{% static 'svg/heart.svg' %}"/></li>
-            <li type="button"><img  class="col" width="20px" height="20px" src="{% static 'svg/share.svg' %}"/></li>
-            <li type="button"><img  class="col" width="20px" height="20px" src="{% static 'svg/message-circle.svg' %}"/></li>
+            <li>
+                <img type="button" width="20" height="20" src="{% static 'svg/heart.svg' %}"/>
+            </li>
+            <li>
+                <img type="button" width="20" height="20" src="{% static 'svg/share.svg' %}"/>
+            </li>
+            <li>
+                <img type="button" width="20" height="20" src="{% static 'svg/message-circle.svg' %}"/>
+            </li>
+            <li>
+                <img type="button" width="20" height="20" src="{% static 'svg/trash.svg' %}"/>
+            </li>
         </ul>
     </div>
     {% endfor %}
