@@ -21,27 +21,31 @@
     <div class="card my-3">
         <div class="card-header">
             <div class="row">
-                <div class="col">{{tweet.owner.name}}</div>
+                <div class="col">{{tweet.author.name}}</div>
                 <div class="col text-muted d-grid justify-content-md-end">Posted on {{tweet.created|date:"M d, Y"}}</div>
             </div>
         </div>
         <div class="card-body">
             {{tweet.content}}
         </div>
-        <ul class="row row-cols-auto ms-2 list-unstyled">
-            <li>
-                <img type="button" width="20" height="20" src="{% static 'svg/heart.svg' %}"/>
-            </li>
-            <li>
-                <img type="button" width="20" height="20" src="{% static 'svg/share.svg' %}"/>
-            </li>
-            <li>
-                <img type="button" width="20" height="20" src="{% static 'svg/message-circle.svg' %}"/>
-            </li>
-            <li>
-                <img type="button" width="20" height="20" src="{% static 'svg/trash.svg' %}"/>
-            </li>
-        </ul>
+            <ul class="row row-cols-auto ms-2 list-unstyled">
+                <li><button class="btn btn-outline-secondary" action="{% url 'like-tweet' %}">
+                    <img type="button" width="20" height="20" src="{% static 'svg/heart.svg' %}"/>
+                </button>
+                </li>
+                <!-- <li><button class="btn btn-outline-secondary">
+                    <img type="button" width="20" height="20" src="{% static 'svg/share.svg' %}"/>
+                </button>
+                </li>
+                <li><button class="btn btn-outline-secondary">
+                    <img type="button" width="20" height="20" src="{% static 'svg/message-circle.svg' %}"/>
+                </button>
+                </li>
+                <li><button class="btn btn-outline-secondary">
+                    <img type="button" width="20" height="20" src="{% static 'svg/trash.svg' %}"/>
+                </button>
+                </li> -->
+            </ul>
     </div>
     {% endfor %}
 </div>
