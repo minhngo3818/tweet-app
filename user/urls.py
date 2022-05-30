@@ -9,4 +9,5 @@ urlpatterns = [
     path('profile/', views.viewProfile, name='profile'),
     path('edit-profile/', views.editProfile, name='edit-profile'),
     path('tweets/', views.viewTweet, name='tweets'),
+    path('like/', views.likedTweet, name='like-tweet')
 ]

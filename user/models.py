@@ -31,11 +31,32 @@ class Profile(models.Model):
         ordering = ['created']
 
 class Tweet(models.Model):
-    owner = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, blank=True)
+    author = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, blank=True, related_name='author')
     content = models.TextField(null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    liked = models.ManyToManyField(Profile, default=None, blank=True, related_name='liked')
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
 
     class Meta:
         ordering = ['-created']
+
+    def __str__(self):
+        return str(self.content)
+
+    @property
+    def numLikes(self):
+        return self.liked.all.count()
+
+LIKE_CHOICES = (
+    ('Like', 'Like'),
+    ('Unlike', 'Unlike')
+)
+
+class Like(models.Model):
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    tweet = models.ForeignKey(Tweet, on_delete=models.CASCADE)
+    value = models.CharField(choices=LIKE_CHOICES, default='Like', max_length=10)
+
+    def __str__(self):
+        return str(self.post)

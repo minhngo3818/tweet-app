@@ -102,4 +102,13 @@ def viewTweet(request):
 
     return render(request, 'tweets.html', context)
 
+@login_required(login_url='login')
+def likedTweet(request):
+    user = request.user
+    
+    
+    return redirect('tweets')
+
+
+
 
