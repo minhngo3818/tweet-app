@@ -36,4 +36,3 @@ def deleteUser(sender,instance, **kwargs):
 
     print('Deleted user!')
 
-

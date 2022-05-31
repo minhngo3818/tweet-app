@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 import uuid
 # Create your models here.
 
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=100, null=True, blank=True)
@@ -48,10 +49,12 @@ class Tweet(models.Model):
     def numLikes(self):
         return self.liked.all.count()
 
+
 LIKE_CHOICES = (
     ('Like', 'Like'),
     ('Unlike', 'Unlike')
 )
+
 
 class Like(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
