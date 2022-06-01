@@ -23,7 +23,7 @@ class ClientCreationForm(UserCreationForm):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['name', 'lastname', 'email', 'bio']
+        fields = ['name', 'lastname', 'email', 'profile_img','bio']
         labels = {
             'name': 'Name',
             'lastname': 'Last Name',

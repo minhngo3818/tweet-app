@@ -3,10 +3,15 @@
 {% block content %}
 <div class="container-fluid my-5 ms-5">
     <div class="row g-3">
-        <div class="col-4">
-            <img class="img-fuild img-thumbnail" src={{profile.imageURL}} />
+        <div class="col-4 text-center">
+            <img class="img-fuild img-thumbnail" src={{profile.imageURL}} width="200" height="200"/>
             <div class="my-3">
-                <h4>{{profile.name}}</h4>
+                <h4>{{profile.name}} 
+                    
+                    {% if profile.lastname is not None %}
+                    {{profile.lastname}}
+                    {% endif %}
+                </h4>
             </div>
         </div>
         <div class="col-6">

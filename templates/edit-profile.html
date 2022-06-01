@@ -4,7 +4,7 @@
     <a class="btn btn-secondary px-4" href="{% url 'profile' %}">Return to Profile</a>
     <hr>
 
-    <form method="POST" action="{% url 'edit-profile' %}">
+    <form method="POST" action="{% url 'edit-profile' %}" enctype="multipart/form-data">
     {% csrf_token%}
     {% for field in form %}
     <div class="col-12 my-3">
