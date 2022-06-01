@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.views.decorators.cache import cache_control, never_cache # Fix logout browser back btn
 from django.urls import conf
-from .models import Profile, Tweet
+from .models import Profile, Tweet, Like
 from .forms import ClientCreationForm, ProfileForm, TweetForm
 
 # Create your views here.
@@ -83,11 +83,12 @@ def editProfile(request):
 @login_required(login_url='login')
 def viewTweet(request):
     form = TweetForm()
+    user = request.user
 
     if request.method == "POST":
         form = TweetForm(request.POST)
         tweet = form.save(commit=False)
-        tweet.owner = request.user.profile
+        tweet.author = request.user.profile
         tweet.save()
         messages.success(request, "Your tweet was posted!")
 
@@ -97,16 +98,36 @@ def viewTweet(request):
     tweets = Tweet.objects.all()
     context = {
         'form': form,
-        'tweets': tweets
+        'tweets': tweets,
+        'user': user
     }
 
     return render(request, 'tweets.html', context)
 
 @login_required(login_url='login')
 def likedTweet(request):
-    user = request.user
+    profile = request.user.profile
     
-    
+    if request.method == "POST":
+        tweet_id = request.POST.get('tweet_id')
+        tweet = Tweet.objects.get(id=tweet_id)
+
+        if profile in tweet.liked.all():
+            tweet.liked.remove(profile)
+        else:
+            tweet.liked.add(profile)
+
+        like, created = Like.objects.get_or_create(owner=profile, tweet=tweet)
+        if not created:
+            if like.value == 'Like':
+                like.value = 'Unlike'
+  
+            else:
+                like.value = 'Like'
+
+        like.save()
+
+
     return redirect('tweets')
 
 

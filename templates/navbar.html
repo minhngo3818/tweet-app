@@ -11,6 +11,7 @@
         {% endif %}
         
         {% if user.is_authenticated %}
+        <a class="btn btn-outline-light me-2 fs-5" role="button" href="#">{{user.profile.name}}</a>
         <a class="btn btn-outline-light me-2 fs-5" role="button" href="{% url 'tweets' %}">Tweets</a>
         <a class="btn btn-outline-light me-2 fs-5" role="button" href="{% url 'profile' %}">Profile</a>
         <a class="btn btn-outline-light me-2 fs-5" role="button" href="{% url 'logout' %}">Logout</a>

@@ -47,7 +47,7 @@ class Tweet(models.Model):
 
     @property
     def numLikes(self):
-        return self.liked.all.count()
+        return self.liked.all().count()
 
 
 LIKE_CHOICES = (
@@ -57,9 +57,9 @@ LIKE_CHOICES = (
 
 
 class Like(models.Model):
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(Profile, on_delete=models.CASCADE)
     tweet = models.ForeignKey(Tweet, on_delete=models.CASCADE)
     value = models.CharField(choices=LIKE_CHOICES, default='Like', max_length=10)
 
     def __str__(self):
-        return str(self.post)
+        return str(self.tweet)

@@ -29,10 +29,27 @@
             {{tweet.content}}
         </div>
             <ul class="row row-cols-auto ms-2 list-unstyled">
-                <li><button class="btn btn-outline-secondary" action="{% url 'like-tweet' %}">
-                    <img type="button" width="20" height="20" src="{% static 'svg/heart.svg' %}"/>
-                </button>
-                </li>
+                <form action="{% url 'like-tweet' %}" method="POST">
+                    {% csrf_token %}
+
+                    <input type="hidden" name="tweet_id" value="{{tweet.id}}">
+
+                    {% if user.profile not in tweet.liked.all %}
+                    <li>
+                        <button class="btn btn-outline-white" type="submit">
+                            <img width="20" height="20" src="{% static 'svg/heart.svg' %}"/>
+                        </button>
+                    </li>
+                    {% else %}
+                    <li>
+                        <button class="btn btn-danger" type="submit">
+                            <img width="20" height="20" src="{% static 'svg/heart.svg' %}"/>
+                        </button>
+                    </li>
+                    {% endif %}
+                </form>
+                <li class="btn btn-white disabled">{{tweet.liked.all.count}}</li>
+                
                 <!-- <li><button class="btn btn-outline-secondary">
                     <img type="button" width="20" height="20" src="{% static 'svg/share.svg' %}"/>
                 </button>
