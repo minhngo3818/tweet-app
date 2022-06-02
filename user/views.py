@@ -65,7 +65,7 @@ def userRegister(request):
 @login_required(login_url='login')
 def viewProfile(request):
     profile = request.user.profile
-    return render(request, 'profile.html', {'profile': profile})
+    return render(request, 'profile.html', {'profile': profile, 'page': 'profile'})
 
 @login_required(login_url='login')
 def viewOtherProfile(request, pk):
