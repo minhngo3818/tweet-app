@@ -21,7 +21,11 @@
     <div class="card my-3">
         <div class="card-header">
             <div class="row">
-                <div class="col">{{tweet.author.name}}</div>
+                <div class="col">
+                    <a class="text-decoration-none" href="{% url 'other-profile' tweet.author.id %}">
+                        {{tweet.author.name}}
+                    </a>
+                </div>
                 <div class="col text-muted d-grid justify-content-md-end">Posted on {{tweet.created|date:"M d, Y"}}</div>
             </div>
         </div>

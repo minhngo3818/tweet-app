@@ -1,0 +1,33 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<div class="container-fluid my-5 ms-5">
+    <div class="row g-3">
+        <div class="col-4 text-center">
+            <img class="img-fuild img-thumbnail" src={{other_profile.imageURL}} width="200" height="200"/>
+            <div class="my-3">
+                <h4>{{other_profile.name}} 
+                    
+                    {% if other_profile.lastname is not None %}
+                    {{other_profile.lastname}}
+                    {% endif %}
+                </h4>
+            </div>
+        </div>
+        <div class="col-6">
+            <hr>
+            <div class="row my-3">
+                {% if other_profile.bio %}
+                    <p>{{other_profile.bio}}</p>
+                {% endif %}
+            </div>
+            <div class="row my-3">
+                <!-- Add tweet here -->
+            </div>
+            
+        </div>
+    </div>
+    
+
+</div>
+{% endblock content %}

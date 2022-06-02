@@ -60,10 +60,19 @@ def userRegister(request):
     context = {'page': 'register', 'form': form}
     return render(request, 'login-register.html', context)
 
+
+
 @login_required(login_url='login')
 def viewProfile(request):
     profile = request.user.profile
     return render(request, 'profile.html', {'profile': profile})
+
+@login_required(login_url='login')
+def viewOtherProfile(request, pk):
+    other_profile = Profile.objects.get(id=pk)
+
+    context = {'other_profile': other_profile}
+    return render(request, 'other-profile.html', context)
 
 @login_required(login_url='login')
 def editProfile(request):
