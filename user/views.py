@@ -90,7 +90,7 @@ def editProfile(request):
 
 @cache_control(no_store=True, no_cache=True, no_revalidate=True)
 @login_required(login_url='login')
-def viewTweet(request):
+def viewTweets(request):
     page = 'tweets'
     form = TweetForm()
     user = request.user
@@ -123,10 +123,11 @@ def likedTweet(request):
         tweet_id = request.POST.get('tweet_id')
         tweet = Tweet.objects.get(id=tweet_id)
 
-        if profile in tweet.liked.all():
-            tweet.liked.remove(profile)
-        else:
-            tweet.liked.add(profile)
+        if profile != tweet.author:
+            if profile in tweet.liked.all():
+                tweet.liked.remove(profile)
+            else:
+                tweet.liked.add(profile)
 
         like, created = Like.objects.get_or_create(owner=profile, tweet=tweet)
         if not created:

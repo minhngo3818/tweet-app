@@ -1,7 +1,7 @@
 {% extends 'main.html' %}
 {% load static %}
 {% block content %}
-<div class="container my-5">
+<div class="container-sm my-5" width="200">
     <p><div class="d-grid">
         <button class="btn btn-outline-dark fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
           Share your story !
@@ -32,40 +32,31 @@
         <div class="card-body">
             {{tweet.content}}
         </div>
-            <ul class="row row-cols-auto ms-2 list-unstyled">
+            <ul class="row row-cols-auto ms-4 list-unstyled">
+                <li class="btn btn-white disabled">
+                    {{tweet.numLikes}}
+                </li>
                 <form action="{% url 'like-tweet' %}" method="POST">
                     {% csrf_token %}
 
                     <input type="hidden" name="tweet_id" value="{{tweet.id}}">
-
-                    {% if user.profile not in tweet.liked.all %}
-                    <li>
-                        <button class="btn btn-outline-white" type="submit">
-                            <img width="20" height="20" src="{% static 'svg/heart.svg' %}"/>
-                        </button>
-                    </li>
-                    {% else %}
-                    <li>
-                        <button class="btn btn-danger" type="submit">
-                            <img width="20" height="20" src="{% static 'svg/heart.svg' %}"/>
-                        </button>
-                    </li>
+                    {% if tweet.author != user.profile %}
+                        {% if user.profile not in tweet.liked.all %}
+                        <li>
+                            <button class="btn btn-outline-white" type="submit">
+                                <img width="20" height="20" src="{% static 'svg/heart.svg' %}"/>
+                            </button>
+                        </li>
+                        {% else %}
+                        <li>
+                            <button class="btn btn-danger" type="submit">
+                                <img width="20" height="20" src="{% static 'svg/heart.svg' %}"/>
+                            </button>
+                        </li>
+                        {% endif %}
                     {% endif %}
                 </form>
-                <li class="btn btn-white disabled">{{tweet.liked.all.count}}</li>
                 
-                <!-- <li><button class="btn btn-outline-secondary">
-                    <img type="button" width="20" height="20" src="{% static 'svg/share.svg' %}"/>
-                </button>
-                </li>
-                <li><button class="btn btn-outline-secondary">
-                    <img type="button" width="20" height="20" src="{% static 'svg/message-circle.svg' %}"/>
-                </button>
-                </li>
-                <li><button class="btn btn-outline-secondary">
-                    <img type="button" width="20" height="20" src="{% static 'svg/trash.svg' %}"/>
-                </button>
-                </li> -->
             </ul>
     </div>
     {% endfor %}

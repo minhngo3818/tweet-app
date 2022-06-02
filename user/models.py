@@ -47,7 +47,10 @@ class Tweet(models.Model):
 
     @property
     def numLikes(self):
-        return self.liked.all().count()
+        num_likes = str(self.liked.all().count()) + " Like"
+        if self.liked.all().count() > 1:
+            num_likes += "s"
+        return num_likes
 
 
 LIKE_CHOICES = (
