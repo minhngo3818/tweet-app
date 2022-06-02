@@ -36,6 +36,7 @@ class Tweet(models.Model):
     content = models.TextField(null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    comments = models.ManyToManyField(Profile, default=None, blank=True, related_name='user_comment')
     liked = models.ManyToManyField(Profile, default=None, blank=True, related_name='liked')
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
 
@@ -43,7 +44,7 @@ class Tweet(models.Model):
         ordering = ['-created']
 
     def __str__(self):
-        return str(self.content)
+        return self.author.name
 
     @property
     def numLikes(self):
@@ -53,13 +54,29 @@ class Tweet(models.Model):
         return num_likes
 
 
-LIKE_CHOICES = (
-    ('Like', 'Like'),
-    ('Unlike', 'Unlike')
-)
+class Comment(models.Model):
+    author = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='comment_author')
+    tweet = models.ForeignKey(Tweet, on_delete=models.CASCADE, related_name='comment_on_tweet')
+    content = models.TextField(null=True, blank=True)
+    reply = models.ForeignKey('self', on_delete=models.CASCADE, null=True, related_name='replies')
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False) 
+
+    class Meta:
+        ordering = ['-created', '-updated']
+
+    def __str__(self):
+        return "{}, tweet created on {}".format(self.author.name, self.tweet.created)
+
 
 
 class Like(models.Model):
+    LIKE_CHOICES = (
+        ('Like', 'Like'),
+        ('Unlike', 'Unlike')
+    )
+
     owner = models.ForeignKey(Profile, on_delete=models.CASCADE)
     tweet = models.ForeignKey(Tweet, on_delete=models.CASCADE)
     value = models.CharField(choices=LIKE_CHOICES, default='Like', max_length=10)

@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.views.decorators.cache import cache_control, never_cache # Fix logout browser back btn
 from django.urls import conf
 from .models import Profile, Tweet, Like
-from .forms import ClientCreationForm, ProfileForm, TweetForm
+from .forms import ClientCreationForm, ProfileForm, TweetForm, CommentForm
 
 # Create your views here.
 @never_cache
@@ -142,5 +142,47 @@ def likedTweet(request):
 
     return redirect('tweets')
 
+@login_required(login_url='login')
+def updateMyTweet(request, pk):
+    profile = request.user.profile
+    my_tweet = profile.tweet.get(id=pk)
+    edit_form = TweetForm(instance=my_tweet)
+
+    if request.emthod == 'POST':
+        edit_form = TweetForm(request.POST, instance=my_tweet)
+        if edit_form.is_valid():
+            edit_form.save()
+            messages.success(request, 'Your tweet was edited successfully!')
+
+        return redirect('tweets')
+
+    context = {'edit-form': edit_form}
+    return render(request, 'tweets.html', context)
+    pass
+
+@login_required(login_url='login')
+def deleteMyTweet(request, pk):
+    profile = request.user.profile
+    my_tweet = profile.tweet.get(id=pk)
+    if request.method == 'POST':
+        my_tweet.delete()
+        messages.success(request, 'Your tweet was deleted successfully')
+
+    return redirect('tweets')
+
+@login_required(login_url='login')
+def commentTweet(request, pk):
+    profile = request.user.profile
+    comment_form = CommentForm()
+    if request.method == 'POST':
+        comment_form = CommentForm(request.POST)
+        comment_form.save(commit=False)
+        tweet_id = request.POST.get('tweet_id')
+        tweet = Tweet.objects.get(id=tweet_id)
+        comment_form.save()
+
+    # In confusion of link to tweet_id and comment_id
+    # will be two cases: on Tweet and reply on Comment
+    pass
 
 
