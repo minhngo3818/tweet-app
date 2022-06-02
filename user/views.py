@@ -91,6 +91,7 @@ def editProfile(request):
 @cache_control(no_store=True, no_cache=True, no_revalidate=True)
 @login_required(login_url='login')
 def viewTweet(request):
+    page = 'tweets'
     form = TweetForm()
     user = request.user
 
@@ -108,7 +109,8 @@ def viewTweet(request):
     context = {
         'form': form,
         'tweets': tweets,
-        'user': user
+        'user': user,
+        'page': page
     }
 
     return render(request, 'tweets.html', context)
