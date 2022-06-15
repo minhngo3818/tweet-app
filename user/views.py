@@ -238,3 +238,18 @@ def deleteComment(request, pk):
         messages.success(request, "Your comment was deleted successfully!")
 
         return redirect('tweets')
+
+@login_required(login_url='login')
+def replyComment(request, pk):
+    if request.method == 'POST':
+        # reply_input = Tweet.objects.get(id=pk)
+        # reply_form = CommentForm(request.POST)
+        # reply = reply_form.save(commit=False)
+        # reply.tweet = reply_input
+        # reply.author = request.user.profile
+        # reply.save()
+
+        # print('User check:', request.user.profile.name)
+        # print('Comment check: ', request.user.profile.comment.content)
+        # print('Reply Check: ', reply.comment.content)
+        return redirect('tweets')

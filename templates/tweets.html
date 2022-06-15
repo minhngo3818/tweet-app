@@ -129,7 +129,7 @@
                 {% endif %}
             </div>
 
-            <!-- SECCOND ROW OF FOOTER-->
+            <!-- COMMENT TWEET EXPAND -->
             <div class="row">
                 <form class="collapse" method="POST" id="collapse-{{tweet.id}}" action="{% url 'comment-tweet' tweet.id %}">
                     {% csrf_token %}
@@ -140,7 +140,10 @@
                 </form>
             </div>
         </div>
+
+        <!-- COMMENT SECTION -->
         {% include 'comment.html' %}
+
     </div>
     {% endfor %}
 </div>

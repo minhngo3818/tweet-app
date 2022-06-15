@@ -47,7 +47,7 @@ class TweetForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['content'].widget.attrs.update({
             'class': 'form-control my-3',
-            'placeholder': 'What\'s poppin?...',
+            'placeholder': 'What\'s poppin? . . .',
             'rows': '5'})
 
         # Attrs keywords are from bootstrap
