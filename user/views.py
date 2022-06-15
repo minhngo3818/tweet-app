@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.views.decorators.cache import cache_control, never_cache # Fix logout browser back btn
 from django.urls import conf
 from django.db.models import Q
-from .models import Profile, Tweet, Like, Comment
+from .models import Profile, Tweet, Like, Comment, LikeComment
 from .forms import ClientCreationForm, ProfileForm, TweetForm, CommentForm
 
 
@@ -108,14 +108,14 @@ def viewTweets(request):
         # Refresh the page, no copy of data within form will be replicated
 
     tweets = Tweet.objects.all()
-    print(tweets.first().content)
+    comments = Comment.objects.all()
+
     context = {
         'page': 'tweets',
         'form': form,
         'comment_form': comment_form,
         'tweets': tweets,
-        'user': user,
-        
+        'user': user, 
     }
 
     return render(request, 'tweets.html', context)
@@ -174,23 +174,20 @@ def editMyTweet(request, pk):
 
 @login_required(login_url='login')
 def deleteMyTweet(request, pk):
-    profile = request.user.profile
-    my_tweet = profile.tweets.get(id=pk)
     if request.method == 'POST':
-        
+        profile = request.user.profile
+        my_tweet = profile.tweets.get(id=pk)
         my_tweet.delete()
         messages.success(request, 'Your tweet was deleted successfully')
 
         return redirect('tweets')
     
-    return
 
 """COMMENT FUNCTIONS"""
 @login_required(login_url='login')
 def commentTweet(request, pk):
-    comment_tweet = Tweet.objects.get(id=pk)
-
     if request.method == 'POST':
+        comment_tweet = Tweet.objects.get(id=pk)
         comment_form = CommentForm(request.POST)
         comment = comment_form.save(commit=False)
         comment.tweet = comment_tweet
@@ -201,12 +198,43 @@ def commentTweet(request, pk):
         return redirect('tweets')
     # In confusion of link to tweet_id and comment_id
     # will be two cases: on Tweet and reply on Comment
-    return
+
+@login_required(login_url='login')
+def likeComment(request, pk):
+    if request.method == "POST":
+        profile = request.user.profile
+        comment = Comment.objects.get(id=pk)
+        if profile != comment.author:
+            if profile in comment.liked.all():
+                comment.liked.remove(profile)
+            else:
+                comment.liked.add(profile)
+
+        like_comment, created = LikeComment.objects.get_or_create(owner=profile, comment=comment)
+        if not created:
+            if like_comment.value == 'Like':
+                like_comment.value = 'Unlike'
+  
+            else:
+                like_comment.value = 'Like'
+
+        like_comment.save()
+
+        return redirect('tweets')   
 
 @login_required(login_url='login')
 def editComment(request, pk):
+    
+    
+    
     pass
 
 @login_required(login_url='login')
 def deleteComment(request, pk):
-    pass
+    if request.method == "POST":
+        profile = request.user.profile
+        comment = profile.author_comment.get(id=pk)
+        comment.delete()
+        messages.success(request, "Your comment was deleted successfully!")
+
+        return redirect('tweets')

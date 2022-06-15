@@ -17,7 +17,8 @@ urlpatterns = [
     path('delete-tweet/<str:pk>/', views.deleteMyTweet, name='delete-tweet'),
 
     path('comment-tweet/<str:pk>/', views.commentTweet, name='comment-tweet'),
+    path('like-comment/<str:pk>/', views.likeComment, name='like-comment'),
     path('edit-comment/<str:pk>/', views.editComment, name='edit-comment'),
-    path('delete-comment/<str:pk>', views.deleteComment, name='delelte-comment')
+    path('delete-comment/<str:pk>/', views.deleteComment, name='delete-comment')
     
 ]

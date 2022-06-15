@@ -13,10 +13,39 @@
                 quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
                 non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
             <p>
-            <a class="btn btn-primary" role="button">See What's Poppin!»</a>
+            <a class="btn btn-primary" role="button" 
+                {% if user.is_authenticated %}
+                    href="{% url 'tweets' %}"
+                {% else %}
+                    href="{% url 'login' %}"
+                {% endif %}>
+                See What's Poppin!»</a>
             </p>
         </div>
     </div>
+</div>
+<div class="container mt-auto">
+    <footer class="py-3 my-4">
+        <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+            <li class="nav-item">
+                <a class="nav-link text-muted px-2" href="{% url 'home' %}">Home</a></li>
+            <li class="nav-item">
+                <a class="nav-link text-muted px-2" 
+                {% if user.is_authenticated %}
+                    href="{% url 'tweets' %}"
+                {% else %}
+                    href="{% url 'login' %}"
+                {% endif %}>Tweets</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-muted px-2" href="#">About</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-muted px-2" href="https://github.com/minhngo3818">Github</a>
+            </li>
+        </ul>
+        <p class="text-center text-muted">&copy;2022 created by Minh Tuyen, powered by Django</p>
+    </footer>
 </div>
 
 {% endblock content %}
