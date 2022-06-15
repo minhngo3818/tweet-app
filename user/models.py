@@ -32,11 +32,11 @@ class Profile(models.Model):
         ordering = ['created']
 
 class Tweet(models.Model):
-    author = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, blank=True, related_name='author')
+    author = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, blank=True, related_name='tweets')
     content = models.TextField(null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    comments = models.ManyToManyField(Profile, default=None, blank=True, related_name='user_comment')
+    # comments = models.OneToManyField(Tweet, default=None, blank=True, related_name='comments')
     liked = models.ManyToManyField(Profile, default=None, blank=True, related_name='liked')
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
 
@@ -56,7 +56,7 @@ class Tweet(models.Model):
 
 class Comment(models.Model):
     author = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='comment_author')
-    tweet = models.ForeignKey(Tweet, on_delete=models.CASCADE, related_name='comment_on_tweet')
+    tweet = models.ForeignKey(Tweet, on_delete=models.CASCADE, related_name='comments_set')
     content = models.TextField(null=True, blank=True)
     reply = models.ForeignKey('self', on_delete=models.CASCADE, null=True, related_name='replies')
     created = models.DateTimeField(auto_now_add=True)
@@ -64,7 +64,7 @@ class Comment(models.Model):
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False) 
 
     class Meta:
-        ordering = ['-created', '-updated']
+        ordering = ['created', '-updated']
 
     def __str__(self):
         return "{}, tweet created on {}".format(self.author.name, self.tweet.created)
@@ -83,3 +83,6 @@ class Like(models.Model):
 
     def __str__(self):
         return str(self.tweet)
+
+
+# Add hashing protect when render id on html templates

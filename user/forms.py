@@ -59,8 +59,8 @@ class CommentForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['comment'].widget.attrs.update({
+        self.fields['content'].widget.attrs.update({
             'class': 'form-control my-3',
             'placeholder': 'What do you think ?...',
-            'rows': '1'
+            'rows': '2'
         })

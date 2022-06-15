@@ -5,10 +5,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.views.decorators.cache import cache_control, never_cache # Fix logout browser back btn
 from django.urls import conf
-from .models import Profile, Tweet, Like
+from django.db.models import Q
+from .models import Profile, Tweet, Like, Comment
 from .forms import ClientCreationForm, ProfileForm, TweetForm, CommentForm
 
-# Create your views here.
+
+"""USER & PROFILE FUNCTIONS"""
 @never_cache
 def viewHome(request):
     return render(request, 'homepage.html')
@@ -60,8 +62,6 @@ def userRegister(request):
     context = {'page': 'register', 'form': form}
     return render(request, 'login-register.html', context)
 
-
-
 @login_required(login_url='login')
 def viewProfile(request):
     profile = request.user.profile
@@ -88,17 +88,19 @@ def editProfile(request):
     context = {'form':form}
     return render(request, 'edit-profile.html', context)
 
+
+"""TWEET FUNCTIONS"""
 @cache_control(no_store=True, no_cache=True, no_revalidate=True)
 @login_required(login_url='login')
 def viewTweets(request):
-    page = 'tweets'
     form = TweetForm()
+    comment_form = CommentForm()
     user = request.user
 
     if request.method == "POST":
         form = TweetForm(request.POST)
         tweet = form.save(commit=False)
-        tweet.author = request.user.profile
+        tweet.author = user.profile
         tweet.save()
         messages.success(request, "Your tweet was posted!")
 
@@ -106,11 +108,14 @@ def viewTweets(request):
         # Refresh the page, no copy of data within form will be replicated
 
     tweets = Tweet.objects.all()
+    print(tweets.first().content)
     context = {
+        'page': 'tweets',
         'form': form,
+        'comment_form': comment_form,
         'tweets': tweets,
         'user': user,
-        'page': page
+        
     }
 
     return render(request, 'tweets.html', context)
@@ -139,50 +144,69 @@ def likedTweet(request):
 
         like.save()
 
-
     return redirect('tweets')
 
+# Work on this function next
 @login_required(login_url='login')
-def updateMyTweet(request, pk):
-    profile = request.user.profile
-    my_tweet = profile.tweet.get(id=pk)
+def editMyTweet(request, pk):
+    user = request.user
+    my_tweet = user.profile.tweets.get(id=pk)
     edit_form = TweetForm(instance=my_tweet)
+    tweets = Tweet.objects.all()
 
-    if request.emthod == 'POST':
+    if request.method == 'POST':
         edit_form = TweetForm(request.POST, instance=my_tweet)
         if edit_form.is_valid():
             edit_form.save()
-            messages.success(request, 'Your tweet was edited successfully!')
+            messages.success(request, 'Your tweet was updated successfully!')
 
         return redirect('tweets')
 
-    context = {'edit-form': edit_form}
+    context = {
+        'page': 'edit-my-tweet',
+        'my_tweet': my_tweet,
+        'edit_form': edit_form,
+        'tweets': tweets,
+        'user' : user,
+        }
+
     return render(request, 'tweets.html', context)
-    pass
 
 @login_required(login_url='login')
 def deleteMyTweet(request, pk):
     profile = request.user.profile
-    my_tweet = profile.tweet.get(id=pk)
+    my_tweet = profile.tweets.get(id=pk)
     if request.method == 'POST':
+        
         my_tweet.delete()
         messages.success(request, 'Your tweet was deleted successfully')
 
-    return redirect('tweets')
+        return redirect('tweets')
+    
+    return
 
+"""COMMENT FUNCTIONS"""
 @login_required(login_url='login')
 def commentTweet(request, pk):
-    profile = request.user.profile
-    comment_form = CommentForm()
+    comment_tweet = Tweet.objects.get(id=pk)
+
     if request.method == 'POST':
         comment_form = CommentForm(request.POST)
-        comment_form.save(commit=False)
-        tweet_id = request.POST.get('tweet_id')
-        tweet = Tweet.objects.get(id=tweet_id)
-        comment_form.save()
+        comment = comment_form.save(commit=False)
+        comment.tweet = comment_tweet
+        comment.author = request.user.profile
+        comment.save()
 
+        print('commentTweet worked!')
+        return redirect('tweets')
     # In confusion of link to tweet_id and comment_id
     # will be two cases: on Tweet and reply on Comment
+    return
+
+@login_required(login_url='login')
+def editComment(request, pk):
     pass
 
-
+@login_required(login_url='login')
+def deleteComment(request, pk):
+    pass

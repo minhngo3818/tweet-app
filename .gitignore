@@ -1,4 +1,8 @@
 venv/*
 user/__pycache__/*
 user/migrations/*
+tweet_app/__pycache__/*
 db.sqlite3
+.vscode
+
+progress.txt

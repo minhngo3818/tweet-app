@@ -3,11 +3,17 @@
 {% block content %}
 <div class="container-sm my-5" width="200">
     <p><div class="d-grid">
-        <button class="btn btn-outline-dark fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-          Share your story !
-        </button>
+        {% if page != 'tweets' %}
+            <button class="btn btn-dark fs-5 disabled" type="button">
+                Share your story !
+            </button>
+        {% else %}
+            <button class="btn btn-outline-dark fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#collapse" aria-expanded="false" aria-controls="collapse">
+                Share your story !
+            </button>
+        {% endif %}
     </div></p>
-    <form method="POST" class="collapse" id="collapseExample">
+    <form method="POST" class="collapse" id="collapse">
         {% csrf_token %}
         <div class="card card-body">
             {{form.content}}
@@ -19,45 +25,132 @@
 
     {% for tweet in tweets %}
     <div class="card my-3">
-        <div class="card-header">
+        <div class="card-header bg-dark">
             <div class="row">
-                <div class="col">
-                    <a class="text-decoration-none" href="{% url 'other-profile' tweet.author.id %}">
-                        {{tweet.author.name}}
+                <div class="col-1">
+                    <img class="rounded-circle z-depth" width="30" height="30" src="{{tweet.author.imageURL}}" />
+                </div>
+                <div class="col-2 justify-content-md-end">
+                    <a class="text-decoration-none text-white" href="{% url 'other-profile' tweet.author.id %}">
+                        <strong>{{tweet.author.name}}</strong>
                     </a>
                 </div>
-                <div class="col text-muted d-grid justify-content-md-end">Posted on {{tweet.created|date:"M d, Y"}}</div>
+                <div class="col text-white d-grid justify-content-md-end">Posted on {{tweet.created|date:"M d, Y"}}</div>
             </div>
         </div>
         <div class="card-body">
-            {{tweet.content}}
+            {% if tweet.id == my_tweet.id and page == 'edit-my-tweet' %}
+            <!-- EDIT-TWEET BUTTON TRIGGERED-->
+            <form action="{% url 'edit-tweet' tweet.id %}" method="POST">
+                {% csrf_token %}
+                {{edit_form.content}}
+                <a role="button" class="btn btn-danger me-md-2" href="{% url 'tweets' %}">Cancel</a>
+                <button type="submit" class="btn btn-dark">Change</button>
+            </form>
+            {% else %}
+                {{tweet.content}}
+            {% endif %}
         </div>
-            <ul class="row row-cols-auto ms-4 list-unstyled">
-                <li class="btn btn-white disabled">
-                    {{tweet.numLikes}}
-                </li>
-                <form action="{% url 'like-tweet' %}" method="POST">
-                    {% csrf_token %}
 
-                    <input type="hidden" name="tweet_id" value="{{tweet.id}}">
-                    {% if tweet.author != user.profile %}
-                        {% if user.profile not in tweet.liked.all %}
-                        <li>
-                            <button class="btn btn-outline-white" type="submit">
-                                <img width="20" height="20" src="{% static 'svg/heart.svg' %}"/>
-                            </button>
-                        </li>
-                        {% else %}
-                        <li>
-                            <button class="btn btn-danger" type="submit">
-                                <img width="20" height="20" src="{% static 'svg/heart.svg' %}"/>
-                            </button>
-                        </li>
-                        {% endif %}
-                    {% endif %}
-                </form>
+        <div class="card-footer bg-white">
+            <div class="row row-cols-auto ms-2 list-unstyled">
+                <div class="col">
+                    <button class="btn btn-white disabled btn-sm">
+                        {{tweet.numLikes}}
+                    </button>
+                </div>
+                {% if user.profile != tweet.author %}
+                <!-- LIKE BUTTON -->
+                <div class="col-1">
+                    <form action="{% url 'like-tweet' %}" method="POST">
+                        {% csrf_token %}
+        
+                        <input type="hidden" name="tweet_id" value="{{tweet.id}}">
+                            {% if user.profile not in tweet.liked.all %}
+                                <button class="btn btn-outline-white btn-sm" type="submit">
+                                    <img width="20" height="20" src="{% static 'svg/heart.svg' %}"/>
+                                </button>
+                            {% else %}
+                                <button class="btn btn-danger btn-sm" type="submit">
+                                    <img width="20" height="20" src="{% static 'svg/heart.svg' %}"/>
+                                </button>
+                            {% endif %}
+        
+                    </form>
+                </div>
+
+                {% endif %}
+
                 
-            </ul>
+
+                <!-- COMMENT TWEET SECTION -->
+                <div class="col-1" >
+                    <div data-bs-toggle="tooltip" title="Comment">
+                        <a class="btn btn-outline-white btn-sm" role="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{tweet.id}}" aria-expaned="false" aria-controls="collapse">
+                            <img width="20" height="20" src="{% static 'svg/comment.svg' %}" />
+                        </a>
+                    </div>
+                </div>
+
+                {% if user.profile == tweet.author %}
+                <!-- EDIT-TWEET BUTTON -->
+                <div class="col-1" data-bs-toggle="tooltip" title="Edit Tweet">
+                    <a class="btn btn-outline-white btn-sm" href="{% url 'edit-tweet' tweet.id %}" role="button">
+                        <img width="20" height="20" src="{% static 'svg/pencil.svg' %}"/>
+                    </a>
+                </div>
+
+
+                <!--DELETE BUTTON-->
+                <div class="col-1">
+                    <div data-bs-toggle="tooltip" title="Delete Tweet">
+                        <button class="btn btn-outline-white btn-sm" data-bs-toggle="modal" data-bs-target="#Modal-{{tweet.id}}" type="button">
+                            <img width="20" height="20" src="{% static 'svg/trash.svg' %}">
+                        </button>
+                    </div>
+                    
+                    <div class="modal fade" id="Modal-{{tweet.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <form action="{% url 'delete-tweet' tweet.id %}?next=/tweet" method="POST">
+                            {% csrf_token %}
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-body fs-4">
+                                        Are you sure to delete your tweet?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                                        <input type="submit" value="Yes" name="tweet-id" class="btn btn-danger"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- SECCOND ROW OF FOOTER-->
+            <div class="row">
+                <form class="collapse" method="POST" id="collapse-{{tweet.id}}" action="{% url 'comment-tweet' tweet.id %}">
+                    {% csrf_token %}
+                    {{comment_form.content}} <!-- add comment in viewTweet function | "form" is tweet-form-->
+                <div class="d-md-flex justify-content-md-end">
+                    <button type="submmit" class="btn btn-dark me-md-end">Comment</button>
+                </div> 
+                </form>
+            </div>
+        </div>
+        <!-- RENDER COMMENTS SECTION -->
+        {% for comment in tweet.comments_set.all %}
+        <div class="card-footer">
+            <img style="float:left;" width="20" height="20" src="{% static 'svg/arrow-return-right.svg' %}" />&nbsp;&nbsp;{{comment.content}}
+            <p style="display:inline;" class="text-muted">- - on&nbsp;{{comment.created|date:"M d, Y"}} </p>
+            <div class="container-fuid ms-3 mt-2">
+                <button class="btn btn-outline-dark btn-sm">Like</button>
+                <button class="btn btn-outline-dark btn-sm">Reply</button>
+            </div>
+        </div>
+        {% endfor %}
     </div>
     {% endfor %}
 </div>
