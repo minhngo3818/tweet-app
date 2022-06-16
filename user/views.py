@@ -224,9 +224,16 @@ def likeComment(request, pk):
 
 @login_required(login_url='login')
 def editComment(request, pk):
-    
-    
-    
+    if request.method == 'POST':
+        user = request.user
+        my_comment = user.profile.comment.get(id=pk)
+        edit_form = CommentForm(instance=my_comment)
+        edit_form = CommentForm(request.POST, instance=my_comment)
+        if edit_form.is_valid():
+            edit_form.save()
+            messages.success(request, 'Your tweet was updated successfully!')
+
+        return redirect('tweets')
     pass
 
 @login_required(login_url='login')
@@ -242,14 +249,11 @@ def deleteComment(request, pk):
 @login_required(login_url='login')
 def replyComment(request, pk):
     if request.method == 'POST':
-        # reply_input = Tweet.objects.get(id=pk)
-        # reply_form = CommentForm(request.POST)
-        # reply = reply_form.save(commit=False)
-        # reply.tweet = reply_input
-        # reply.author = request.user.profile
-        # reply.save()
+        parent = Comment.objects.get(id=pk)
+        reply_form = CommentForm(request.POST)
+        reply = reply_form.save(commit=False)
+        reply.parent = parent
+        reply.author = request.user.profile
+        reply.save()
 
-        # print('User check:', request.user.profile.name)
-        # print('Comment check: ', request.user.profile.comment.content)
-        # print('Reply Check: ', reply.comment.content)
         return redirect('tweets')

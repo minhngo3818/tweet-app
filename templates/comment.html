@@ -72,11 +72,9 @@
 
         <!-- REPLY COMMENT BUTTON-->
         <div class="col-1">
-            <div data-bs-toggle="tooltip" title="Comment" >
-                <a class="btn btn-outline-dark btn-sm" role="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{comment.id}}" aria-expaned="false" aria-controls="collapse">
-                    Reply
-                </a>
-            </div>
+            <a class="btn btn-outline-dark btn-sm" role="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{comment.id}}" aria-expaned="false" aria-controls="collapse">
+                Reply
+            </a>
         </div>
     </div>
     <div>
@@ -88,5 +86,102 @@
             </div>
         </form>
     </div>
+
+    <!-- REPLY COMMENT SECTION-->
+    {% for reply in comment.replies.all %}
+
+    <div class="card-footer ms-3 justify-content-left">
+        <img style="float:left;" class="rounded-circle z-depth" width="30" height="30" src="{{reply.author.imageURL}}"/>
+        <p style="display:inline;" class="text-muted"><strong class="ms-2">{{reply.author}}</strong> replied on&nbsp;{{reply.created|date:"M d, Y"}} </p>
+        <div class="container justify-content-left ms-4 mt-3">
+            {{reply.content}}
+        </div>
+        <!-- EDIT-REPLYBUTTON TRIGGERED-->
+        <div>
+            <form class="collapse" id="collapse-{{reply.id}}" action="{% url 'edit-comment' reply.id %}" method="POST">
+                {% csrf_token %}
+                {{edit_form.content}}
+                <button type="submit" class="btn btn-dark">Change</button>
+            </form>
+        </div>
+        <div class="container-fuid row row-cols-auto ms-3 mt-2 mb-2">
+            <div class="col text-align-left">
+                <button class="btn btn-outline-white btn-sm" disabled>
+                    {{reply.numLikes}}
+                </button>
+            </div>
+            {% if user.profile != reply.author %}
+            <!-- LIKE BUTTON -->
+            <div class="col-1">
+    
+                <form action="{% url 'like-comment' reply.id %}" method="POST">
+                    {% csrf_token %}
+                    {% if user.profile not in reply.liked.all %}
+                        <button class="btn btn-outline btn-sm" type="submit">
+                            <img width="20" height="20" src="{% static 'svg/heart.svg' %}"/>
+                        </button>
+                    {% else %}
+                        <button class="btn btn-danger btn-sm" type="submit">
+                            <img width="20" height="20" src="{% static 'svg/heart.svg' %}"/>
+                        </button>
+                    {% endif %}
+                </form>
+            </div>
+    
+            {% endif %}
+            {% if user.profile == reply.author %}
+            <!-- EDIT REPLY BUTTON -->
+            <div class="col-1" data-bs-toggle="tooltip" title="Edit Tweet">
+                <button class="btn btn-outline btn-sm" data-bs-toggle="collapse" dat-bs-target="#collapse-{{reply.id}}" aria-expanded="false" aria-controls="collapse" role="button">
+                    <img width="20" height="20" src="{% static 'svg/pencil.svg' %}"/>
+                </button>
+            </div>
+    
+    
+            <!--DELETE reply BUTTON-->
+            <div class="col-1">
+                <div data-bs-toggle="tooltip" title="Delete Tweet">
+                    <button class="btn btn-outline-white btn-sm" data-bs-toggle="modal" data-bs-target="#Modal-{{reply.id}}" type="button">
+                        <img width="20" height="20" src="{% static 'svg/trash.svg' %}">
+                    </button>
+                </div>
+                
+                <div class="modal fade" id="Modal-{{reply.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <form action="{% url 'delete-comment' reply.id %}?next=/tweet" method="POST">
+                        {% csrf_token %}
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-body fs-4">
+                                    Are you sure to delete your tweet?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                                    <input type="submit" value="Yes" name="reply-id" class="btn btn-danger"/>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+    
+            <!-- REPLY BUTTON-->
+            <div class="col-1">
+                <a class="btn btn-outline-dark btn-sm" role="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{comment.id}}" aria-expaned="false" aria-controls="collapse">
+                    Reply
+                </a>
+            </div>
+        </div>
+        <div>
+            <form class="collapse" id="collapse-{{reply.id}}" action="{% url 'reply-comment' reply.id %}" method="POST">
+                {% csrf_token %}
+                {{comment_form.content}}
+                <div class="d-md-flex justify-content-md-end">
+                    <button type="submit" class="btn btn-dark me-md-end">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% endfor %}
 </div>
 {% endfor %}

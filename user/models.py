@@ -56,9 +56,9 @@ class Tweet(models.Model):
 
 class Comment(models.Model):
     author = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='author_comment')
-    tweet = models.ForeignKey(Tweet, on_delete=models.CASCADE, related_name='comments_set')
+    tweet = models.ForeignKey(Tweet, on_delete=models.CASCADE, null=True, blank=True, related_name='comments_set')
     content = models.TextField(null=True, blank=True)
-    reply = models.ForeignKey('self', on_delete=models.CASCADE, null=True, related_name='replies')
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies')
     liked = models.ManyToManyField(Profile, default=None, blank=True, related_name='comment_like')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -68,7 +68,7 @@ class Comment(models.Model):
         ordering = ['created', '-updated']
 
     def __str__(self):
-        return "{}, tweet created on {}".format(self.author.name, self.tweet.created)
+        return "{}, comment created on {}".format(self.author.name, self.content)
 
     @property
     def numLikes(self):
