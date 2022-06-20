@@ -164,22 +164,6 @@
                 </div>
             </div>
             {% endif %}
-    
-            <!-- REPLY BUTTON-->
-            <div class="col-1">
-                <a class="btn btn-outline-dark btn-sm" role="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{comment.id}}" aria-expaned="false" aria-controls="collapse">
-                    Reply
-                </a>
-            </div>
-        </div>
-        <div>
-            <form class="collapse" id="collapse-{{reply.id}}" action="{% url 'reply-comment' reply.id %}" method="POST">
-                {% csrf_token %}
-                {{comment_form.content}}
-                <div class="d-md-flex justify-content-md-end">
-                    <button type="submit" class="btn btn-dark me-md-end">Submit</button>
-                </div>
-            </form>
         </div>
     </div>
     {% endfor %}
