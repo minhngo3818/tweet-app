@@ -1,0 +1,6 @@
+#bgimage {
+    background-image: url("../images/background.jpg");
+    background-repeat: repeat;
+    background-size: 100px 100px;
+    background-position: top;
+}

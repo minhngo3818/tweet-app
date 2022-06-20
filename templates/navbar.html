@@ -3,7 +3,7 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
-    <a class="navbar-brand fs-3" href="{% url 'home' %}">Tweet App</a>
+    <a class="navbar-brand fs-3" href="{% url 'home' %}">Tweet Hub</a>
       <div>
         {% if not user.is_authenticated and page != 'register' and page != 'login'  %}
         <a class="btn btn-outline-light me-2 fs-5" role="button" href="{% url 'login' %}">Login</a>
