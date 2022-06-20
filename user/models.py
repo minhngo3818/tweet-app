@@ -55,7 +55,7 @@ class Tweet(models.Model):
 
 
 class Comment(models.Model):
-    author = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='author_comment')
+    author = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='comments')
     tweet = models.ForeignKey(Tweet, on_delete=models.CASCADE, null=True, blank=True, related_name='comments_set')
     content = models.TextField(null=True, blank=True)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies')

@@ -7,7 +7,18 @@
     <img style="float:left;" class="rounded-circle z-depth" width="30" height="30" src="{{comment.author.imageURL}}"/>
     <p style="display:inline;" class="text-muted"><strong class="ms-2">{{comment.author}}</strong> replied on&nbsp;{{comment.created|date:"M d, Y"}} </p>
     <div class="container justify-content-left ms-4 mt-3">
-        {{comment.content}}
+        {% if comment.id == my_comment.id and page == 'edit-my-comment' %}
+            <!-- EDIT-TWEET BUTTON TRIGGERED-->
+            <form class="container" action="{% url 'edit-comment' comment.id %}" method="POST">
+                {% csrf_token %}
+                {{edit_form.content}}
+                <a role="button" class="btn btn-danger me-md-2" href="{% url 'tweets' %}">Cancel</a>
+                <button type="submit" class="btn btn-dark">Change</button>
+            </form>
+            <br>
+        {% else %}
+            {{comment.content}}
+        {% endif %}
     </div>
     <div class="container-fuid row row-cols-auto ms-3 mt-2 mb-2">
         <div class="col text-align-left">
@@ -32,12 +43,12 @@
                 {% endif %}
             </form>
         </div>
-
         {% endif %}
+
         {% if user.profile == comment.author %}
         <!-- EDIT COMMENT BUTTON -->
         <div class="col-1" data-bs-toggle="tooltip" title="Edit Tweet">
-            <a class="btn btn-outline btn-sm" href="{% url 'edit-tweet' tweet.id %}" role="button">
+            <a class="btn btn-outline btn-sm" href="{% url 'edit-comment' comment.id %}" role="button">
                 <img width="20" height="20" src="{% static 'svg/pencil.svg' %}"/>
             </a>
         </div>
@@ -94,7 +105,18 @@
         <img style="float:left;" class="rounded-circle z-depth" width="30" height="30" src="{{reply.author.imageURL}}"/>
         <p style="display:inline;" class="text-muted"><strong class="ms-2">{{reply.author}}</strong> replied on&nbsp;{{reply.created|date:"M d, Y"}} </p>
         <div class="container justify-content-left ms-4 mt-3">
-            {{reply.content}}
+            {% if reply.id == my_comment.id and page == 'edit-my-comment' %}
+            <!-- EDIT-TWEET BUTTON TRIGGERED-->
+            <form class="container" action="{% url 'edit-comment' reply.id %}" method="POST">
+                {% csrf_token %}
+                {{edit_form.content}}
+                <a role="button" class="btn btn-danger me-md-2" href="{% url 'tweets' %}">Cancel</a>
+                <button type="submit" class="btn btn-dark">Change</button>
+            </form>
+            <br>
+            {% else %}
+                {{reply.content}}
+            {% endif %}
         </div>
         <!-- EDIT-REPLYBUTTON TRIGGERED-->
         <div>
@@ -132,9 +154,9 @@
             {% if user.profile == reply.author %}
             <!-- EDIT REPLY BUTTON -->
             <div class="col-1" data-bs-toggle="tooltip" title="Edit Tweet">
-                <button class="btn btn-outline btn-sm" data-bs-toggle="collapse" dat-bs-target="#collapse-{{reply.id}}" aria-expanded="false" aria-controls="collapse" role="button">
+                <a class="btn btn-outline btn-sm" href="{% url 'edit-comment' reply.id %}"  role="button">
                     <img width="20" height="20" src="{% static 'svg/pencil.svg' %}"/>
-                </button>
+                </a>
             </div>
     
     

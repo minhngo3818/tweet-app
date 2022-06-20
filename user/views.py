@@ -194,7 +194,6 @@ def commentTweet(request, pk):
         comment.author = request.user.profile
         comment.save()
 
-        print('commentTweet worked!')
         return redirect('tweets')
     # In confusion of link to tweet_id and comment_id
     # will be two cases: on Tweet and reply on Comment
@@ -224,17 +223,39 @@ def likeComment(request, pk):
 
 @login_required(login_url='login')
 def editComment(request, pk):
+    # if request.method == 'POST':
+    #     user = request.user
+    #     my_comment = user.profile.comment.get(id=pk)
+    #     edit_form = CommentForm(instance=my_comment)
+    #     edit_form = CommentForm(request.POST, instance=my_comment)
+    #     if edit_form.is_valid():
+    #         edit_form.save()
+    #         messages.success(request, 'Your tweet was updated successfully!')
+
+    #     return redirect('tweets')
+
+    user = request.user
+    my_comment = user.profile.comments.get(id=pk)
+    edit_form = CommentForm(instance=my_comment)
+    tweets = Tweet.objects.all()
+
     if request.method == 'POST':
-        user = request.user
-        my_comment = user.profile.comment.get(id=pk)
-        edit_form = CommentForm(instance=my_comment)
         edit_form = CommentForm(request.POST, instance=my_comment)
         if edit_form.is_valid():
             edit_form.save()
-            messages.success(request, 'Your tweet was updated successfully!')
+            messages.success(request, 'Your comment was updated successfully!')
 
         return redirect('tweets')
-    pass
+
+    context = {
+        'page': 'edit-my-comment',
+        'my_comment': my_comment,
+        'edit_form': edit_form,
+        'tweets': tweets,
+        'user' : user,
+        }
+
+    return render(request, 'tweets.html', context)
 
 @login_required(login_url='login')
 def deleteComment(request, pk):
