@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     # Add-ons
     'user',
     'ckeditor',
+    'factory-boy',
 ]
 
 MIDDLEWARE = [
