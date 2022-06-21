@@ -56,6 +56,18 @@ MIDDLEWARE = [
     "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'Custom',
+        'toolbar_Custom': [
+            ['Styles', 'Format', 'Font', 'FontSize'],
+            ['Bold', 'Italic', 'Underline'],
+            ['Smiley', 'SpecialChar'],
+        ],
+        'height': '300px',
+    }
+}
+
 ROOT_URLCONF = 'tweet_app.urls'
 
 TEMPLATES = [

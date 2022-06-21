@@ -223,16 +223,6 @@ def likeComment(request, pk):
 
 @login_required(login_url='login')
 def editComment(request, pk):
-    # if request.method == 'POST':
-    #     user = request.user
-    #     my_comment = user.profile.comment.get(id=pk)
-    #     edit_form = CommentForm(instance=my_comment)
-    #     edit_form = CommentForm(request.POST, instance=my_comment)
-    #     if edit_form.is_valid():
-    #         edit_form.save()
-    #         messages.success(request, 'Your tweet was updated successfully!')
-
-    #     return redirect('tweets')
 
     user = request.user
     my_comment = user.profile.comments.get(id=pk)

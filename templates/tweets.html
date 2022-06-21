@@ -16,7 +16,12 @@
     <form method="POST" class="collapse" id="collapse">
         {% csrf_token %}
         <div class="card card-body">
-            {{form.content}}
+            <!-- {{ form.media }} -->
+            <div class="container ms-3 me-3 mb-3">
+                {{ form.media }}
+                {{ form.content }}
+            </div>
+            
             <div class="container d-grid">
                 <button class="btn btn-dark fs-5" type="submit">Tweet</button>
             </div>
@@ -43,12 +48,15 @@
             <!-- EDIT-TWEET BUTTON TRIGGERED-->
             <form action="{% url 'edit-tweet' tweet.id %}" method="POST">
                 {% csrf_token %}
-                {{edit_form.content}}
+                <div class="container ms-3 me-3 mb-3">
+                    {{ edit_form.media }}
+                    {{ edit_form.content }}
+                </div>
                 <a role="button" class="btn btn-danger me-md-2" href="{% url 'tweets' %}">Cancel</a>
                 <button type="submit" class="btn btn-dark">Change</button>
             </form>
             {% else %}
-                {{tweet.content}}
+                {{tweet.content|safe}}
             {% endif %}
         </div>
 

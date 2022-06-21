@@ -11,7 +11,10 @@
             <!-- EDIT-TWEET BUTTON TRIGGERED-->
             <form class="container" action="{% url 'edit-comment' comment.id %}" method="POST">
                 {% csrf_token %}
-                {{edit_form.content}}
+                <div class="container ms-3 me-3 mb-3">
+                    {{ edit_form.media }}
+                    {{ edit_form.content }}
+                </div>
                 <a role="button" class="btn btn-danger me-md-2" href="{% url 'tweets' %}">Cancel</a>
                 <button type="submit" class="btn btn-dark">Change</button>
             </form>
@@ -122,7 +125,10 @@
         <div>
             <form class="collapse" id="collapse-{{reply.id}}" action="{% url 'edit-comment' reply.id %}" method="POST">
                 {% csrf_token %}
-                {{edit_form.content}}
+                <div class="container ms-3 me-3 mb-3">
+                    {{ edit_form.media }}
+                    {{ edit_form.content }}
+                </div>
                 <button type="submit" class="btn btn-dark">Change</button>
             </form>
         </div>

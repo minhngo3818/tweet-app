@@ -34,10 +34,9 @@ class Profile(models.Model):
 
 class Tweet(models.Model):
     author = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, blank=True, related_name='tweets')
-    content = models.TextField(null=True, blank=True)
+    content = RichTextField(blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    # comments = models.OneToManyField(Tweet, default=None, blank=True, related_name='comments')
     liked = models.ManyToManyField(Profile, default=None, blank=True, related_name='liked')
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
 
@@ -58,12 +57,11 @@ class Tweet(models.Model):
 class Comment(models.Model):
     author = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='comments')
     tweet = models.ForeignKey(Tweet, on_delete=models.CASCADE, null=True, blank=True, related_name='comments_set')
-    content = models.TextField(null=True, blank=True)
+    content = RichTextField(null=True, blank=True)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies')
     liked = models.ManyToManyField(Profile, default=None, blank=True, related_name='comment_like')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    # text = models.TextField(null=True, blank=True)
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False) 
 
     class Meta:
