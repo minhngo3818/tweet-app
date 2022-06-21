@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'user',
     'ckeditor',
     'factory-boy',
+    'django-htmx',
 ]
 
 MIDDLEWARE = [
@@ -54,7 +55,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    "whitenoise.middleware.WhiteNoiseMiddleware",
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'django_htmx.middleware.HtmxMiddleware',
 ]
 
 CKEDITOR_CONFIGS = {
