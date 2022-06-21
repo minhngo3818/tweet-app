@@ -41,6 +41,7 @@ INSTALLED_APPS = [
 
     # Add-ons
     'user',
+    'ckeditor',
 ]
 
 MIDDLEWARE = [

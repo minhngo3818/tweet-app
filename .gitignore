@@ -1,8 +1,13 @@
 venv/*
-user/__pycache__/*
+
 user/migrations/*
+user/__pycache__/*
 tweet_app/__pycache__/*
+
+staticfiles/*
+
 db.sqlite3
 .vscode
+
 
 progress.txt

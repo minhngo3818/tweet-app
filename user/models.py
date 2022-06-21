@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from ckeditor.fields import RichTextField
 
 import uuid
 # Create your models here.
@@ -62,6 +63,7 @@ class Comment(models.Model):
     liked = models.ManyToManyField(Profile, default=None, blank=True, related_name='comment_like')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    # text = models.TextField(null=True, blank=True)
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False) 
 
     class Meta:
