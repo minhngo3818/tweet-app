@@ -42,8 +42,8 @@ INSTALLED_APPS = [
     # Add-ons
     'user',
     'ckeditor',
-    'factory-boy',
-    'django-htmx',
+    'django_htmx',
+    'factory',
 ]
 
 MIDDLEWARE = [
