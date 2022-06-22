@@ -8,7 +8,7 @@ from django.urls import conf
 from django.db.models import Q
 from .models import Profile, Tweet, Like, Comment, LikeComment
 from .forms import ClientCreationForm, ProfileForm, TweetForm, CommentForm
-
+from .utils import paginateTweet
 
 """USER & PROFILE FUNCTIONS"""
 @never_cache
