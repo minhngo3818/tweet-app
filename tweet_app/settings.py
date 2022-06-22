@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'django_htmx',
     'factory',
     'rest_framework',
-    # 'corsheaders',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
