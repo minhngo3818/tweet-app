@@ -107,7 +107,8 @@ def viewTweets(request):
         return redirect('tweets')   
         # Refresh the page, no copy of data within form will be replicated
 
-    tweets = Tweet.objects.all()
+    # tweets = Tweet.objects.all()
+    tweets = paginateTweets(request, Tweet.objects.all())
     comments = Comment.objects.all()
 
     context = {
