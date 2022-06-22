@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django_htmx',
     'factory',
     'rest_framework',
+    # 'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -58,6 +59,8 @@ MIDDLEWARE = [
 
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django_htmx.middleware.HtmxMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware"
 ]
 
 CKEDITOR_CONFIGS = {
