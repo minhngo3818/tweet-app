@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'ckeditor',
     'django_htmx',
     'factory',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -69,6 +70,12 @@ CKEDITOR_CONFIGS = {
         ],
         'height': '300px',
     }
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
 }
 
 ROOT_URLCONF = 'tweet_app.urls'
