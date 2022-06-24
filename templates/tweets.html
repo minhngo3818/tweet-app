@@ -17,10 +17,9 @@
         {% csrf_token %}
         <div class="card card-body">
             <!-- {{ form.media }} -->
-            <div class="container ms-3 me-3 mb-3">
-                {{ form.media }}
-                {{ form.content }}
-            </div>
+            {{ form.media }}
+            {{ form.content }}
+        
             
             <div class="container d-grid">
                 <button class="btn btn-dark fs-5" type="submit">Tweet</button>
@@ -29,6 +28,11 @@
     </form>
 
     {% for tweet in tweets %}
+    {% if forloop.last %}
+    <div hx-get="{% url 'tweets' %}?page={{ tweets.number|add:1}}" hx-trigger="revealed" hx-swap="afterend" hx-target="this"></div>
+    {% else %}
+    <div>
+    {% endif %}
     <div class="card my-3 mb-3 mt-3">
         <div class="card-header bg-dark">
             <div class="row">
@@ -150,6 +154,7 @@
         {% include 'comment.html' %}
         
 
+    </div>
     </div>
     {% endfor %}
 </div>

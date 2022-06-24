@@ -108,6 +108,7 @@ def viewTweets(request):
         # Refresh the page, no copy of data within form will be replicated
 
     # tweets = Tweet.objects.all()
+    print(request.htmx)
     tweets = paginateTweets(request, Tweet.objects.all())
     comments = Comment.objects.all()
 
